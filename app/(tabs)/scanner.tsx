@@ -1,7 +1,7 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
 import { Button, Dimensions, ScrollView, Text, View } from 'react-native';
-import Fetchdata from '../../components/fetchdata';
+import Fetchdata from '../../components/FetchData';
 
 
 type Product = {
@@ -9,7 +9,7 @@ type Product = {
   name: string;
   Selling_price: number;
   Wholesale_price: number;
-  Barcode: number;
+  Barcode: string;
   description: string;
 };
 
@@ -30,14 +30,13 @@ export default function ScannerScreen() {
   }, [permission]);
 
   useEffect(()=>{
-    let matchProduct = products.find((product) => product.Barcode.toString() === scannedData)
-    if(matchProduct){
-      setDetectedProduct(matchProduct)
-    }else {
-    setDetectedProduct({});
-  }
-
-  }, [scannedData, products])
+      let matchProduct = products.find((product) => product.Barcode.toString() === scannedData)
+      if(matchProduct){
+        setDetectedProduct(matchProduct)
+      }else {
+      setDetectedProduct({});
+    }
+  }, [scannedData])
 
   if (!permission?.granted) {
     return (
@@ -70,22 +69,27 @@ export default function ScannerScreen() {
       }}
     >
       <Fetchdata sendData={handleData} />
-      <View style={{ height: cameraHeight, width: cameraWidth, backgroundColor: '#000' }}>
-        <CameraView
-          style={{ flex: 1 }}
-          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-          barCodeScannerSettings={{
-            barcodeTypes: ['qr', 'ean13', 'ean8', 'code128'],
-          }}
-        />
-      </View>
+
+    
+      {!scanned && (
+        <View style={{ height: cameraHeight, width: cameraWidth, backgroundColor: '#000' }}>
+          <CameraView
+            style={{ flex: 1 }}
+            onBarcodeScanned={handleBarcodeScanned}  // enabled only when visible
+            barCodeScannerSettings={{
+              barcodeTypes: ['qr', 'ean13', 'ean8', 'code128'],
+            }}
+          />
+        </View>
+      )}
+        
       <View style={{ marginTop: 30, alignItems: 'center', width: '90%' }}>
         {scanned ? (
           <>
             <Text style={{ fontSize: 18, marginBottom: 10, textAlign: 'center' }}>
               Scanned: {scannedData}
             </Text>
-            <Button title="Scan Again" onPress={() => {setScannedData(''); setDetectedProduct({}); setScanned(false)}} />
+            <Button title="Scan Again" onPress={() => {setScannedData(''); setScanned(false)}} />
           </>
         ) : (
           <Text style={{ fontSize: 16, color: '#555', textAlign: 'center' }}>
@@ -105,10 +109,6 @@ export default function ScannerScreen() {
               ))}
           </View>
         )}
-
-
-      
-
     </ScrollView>
   )
 }

@@ -6,7 +6,7 @@ type FetchDataProps = {
 
 export default function FetchData({ sendData }: FetchDataProps): null {
   useEffect(() => {
-    fetch('http://192.168.100.69:3000/Products')
+    fetch('http://10.0.0.54:3000/Products')
       .then(res => res.json())
       .then(data => sendData(data))
       .catch(error => {

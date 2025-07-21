@@ -5,7 +5,7 @@
         "name": "Efficascent",
         "Selling_price": 12.5,
         "Wholesale_price": 9,
-        "Barcode": 48033053,
+        "Barcode": "48033053",
         "description": "A product made to apply on skin to relieve stomach gas discomfort."
     },
     {
@@ -13,8 +13,16 @@
         "name": "Nature's Spring 1L",
         "Selling_price": 25,
         "Wholesale_price": 18,
-        "Barcode": 4800049720121,
+        "Barcode": "4800049720121",
         "description": "A water drink for the thirsty"
+    },
+    {
+        "id": 3,
+        "name": "Dove",
+        "Selling_price": 95,
+        "Wholesale_price":87,
+        "Barcode": "4800888164407",
+        "description": "Beauty Soap"
     }
   ]
 }
