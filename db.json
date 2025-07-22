@@ -1,28 +1,36 @@
 {
   "Products": [
-      {
-        "id": 1,
-        "name": "Efficascent",
-        "Selling_price": 12.5,
-        "Wholesale_price": 9,
-        "Barcode": "48033053",
-        "description": "A product made to apply on skin to relieve stomach gas discomfort."
+    {
+      "id": "1",
+      "name": "Efficascent",
+      "Selling_price": 12.5,
+      "Wholesale_price": 9,
+      "Barcode": "48033053",
+      "description": "A product made to apply on skin to relieve stomach gas discomfort."
     },
     {
-        "id": 2,
-        "name": "Nature's Spring 1L",
-        "Selling_price": 25,
-        "Wholesale_price": 18,
-        "Barcode": "4800049720121",
-        "description": "A water drink for the thirsty"
+      "id": "2",
+      "name": "Nature's Spring 1L",
+      "Selling_price": 25,
+      "Wholesale_price": 18,
+      "Barcode": "4800049720121",
+      "description": "A water drink for the thirsty"
     },
     {
-        "id": 3,
-        "name": "Dove",
-        "Selling_price": 95,
-        "Wholesale_price":87,
-        "Barcode": "4800888164407",
-        "description": "Beauty Soap"
+      "id": 1753160013367,
+      "name": "Dove",
+      "Selling_price": 11,
+      "Wholesale_price": 23,
+      "Barcode": "4800888164407",
+      "description": "Beauty soap"
+    },
+    {
+      "id": 1753160070703,
+      "name": "microphone",
+      "Selling_price": 11,
+      "Wholesale_price": 23,
+      "Barcode": "NC-813",
+      "description": "For good voiceover"
     }
   ]
 }

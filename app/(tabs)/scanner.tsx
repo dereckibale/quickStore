@@ -1,36 +1,28 @@
+import { useProducts } from '@/components/FetchData';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Dimensions, ScrollView, Text, View } from 'react-native';
-import Fetchdata from '../../components/FetchData';
 
-
-type Product = {
-  id: number;
-  name: string;
-  Selling_price: number;
-  Wholesale_price: number;
-  Barcode: string;
-  description: string;
-};
 
 export default function ScannerScreen() {
 
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState('');
   const [detectedProduct, setDetectedProduct] = useState({})
-  const [products, setProducts] = useState<Product[]>([]);
   const [permission, requestPermission] = useCameraPermissions();
 
   const screenHeight = Dimensions.get('window').height;
   const cameraHeight = screenHeight/2
   const cameraWidth = ((Dimensions.get('window').width)*3)/4
 
+
+  const {products, reload} = useProducts()
   useEffect(() => {
     if (!permission) requestPermission();
   }, [permission]);
 
   useEffect(()=>{
-      let matchProduct = products.find((product) => product.Barcode.toString() === scannedData)
+      let matchProduct = products?.find((product) => product.Barcode.toString() === scannedData)
       if(matchProduct){
         setDetectedProduct(matchProduct)
       }else {
@@ -52,9 +44,6 @@ export default function ScannerScreen() {
     setScannedData(data);
   };
 
-  const handleData = (data : Product[])=>{ //callback function to store data from fetchdata component
-    setProducts(data)
-  }
 
 
   return (
@@ -68,7 +57,6 @@ export default function ScannerScreen() {
         paddingVertical: 20,
       }}
     >
-      <Fetchdata sendData={handleData} />
 
     
       {!scanned && (
@@ -76,7 +64,7 @@ export default function ScannerScreen() {
           <CameraView
             style={{ flex: 1 }}
             onBarcodeScanned={handleBarcodeScanned}  // enabled only when visible
-            barCodeScannerSettings={{
+            barcodeScannerSettings={{
               barcodeTypes: ['qr', 'ean13', 'ean8', 'code128'],
             }}
           />

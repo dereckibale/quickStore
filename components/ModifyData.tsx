@@ -1,15 +1,8 @@
-type Product = {
-  id: number;
-  name: string;
-  Selling_price: number;
-  Wholesale_price: number;
-  Barcode: string; // assuming Barcode is string now
-  description: string;
-};
+import { Product } from "../utils/types";
 
-export async function addProduct(newProduct: Product) {
+export default async function AddProduct(newProduct: Product) {
   try {
-    const response = await fetch('http://192.168.100.69:3000/Products', {
+    const response = await fetch('http://10.0.0.54:3000/Products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newProduct),

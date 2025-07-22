@@ -1,35 +1,27 @@
+import addProduct from '@/components/ModifyData';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Dimensions, Modal, StyleSheet, Text, TextInput, View } from 'react-native';
-import Fetchdata from '../../components/FetchData';
-
-
-type Product = {
-  id: number;
-  name: string;
-  Selling_price: number;
-  Wholesale_price: number;
-  Barcode: string;
-  description: string;
-};
+import { useProducts } from '../../components/FetchData';
+import { Product } from "../../utils/types";
 
 const { width, height } = Dimensions.get('window');
 
 export default function AddProductScreen() {
-  const [products, setProducts] = useState<Product[]>([]);
+ 
   const [scanned, setScanned] = useState(true); // camera hidden initially
   const [scannedData, setScannedData] = useState('');
   const [permission, requestPermission] = useCameraPermissions();
-
   const [modalVisible, setModalVisible] = useState(false);
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
     Barcode: undefined,
     name: '',
     Selling_price: undefined,
     Wholesale_price: undefined,
-    description: '',
+    description: undefined,
   });
 
+  const {products, reload} = useProducts(); //employed this exported function from FetchData component because this component is already wrapped inside FetchData component from parent component
 
   useEffect(() => {
     if (!permission) requestPermission();
@@ -39,7 +31,7 @@ export default function AddProductScreen() {
     setScanned(true); // close camera
     setScannedData(data);
     console.log('Scanned barcode:', data);
-    const foundProduct = products.find(
+    const foundProduct = products?.find(
     (product) => product.Barcode.toString() === data );
         if(!foundProduct){
             console.log("Product NOT found, show form to add new product");
@@ -64,19 +56,40 @@ export default function AddProductScreen() {
   }
 
 
-  const handleData = (data: Product[]) => {
-    setProducts(data);
-  };
+    const handleSaveButton = async () => {
+      
+      if (!newProduct.name || !newProduct.Barcode) {
+        alert('Please fill in the required fields.');
+        return;
+      }
+      if (typeof newProduct.Selling_price !== "number" || isNaN(newProduct.Selling_price)) {
+        alert('Please enter a valid Selling Price.');
+        return;
+      }
 
-    const handleSaveButton = () => {
-    // This function will be called when the Save button is pressed.
-    console.log(newProduct);
-    // Add your save logic here later...
+      const productToSave: Product = {
+        id: Date.now(), // or get the real id from your backend
+        name: newProduct.name,
+        Selling_price: newProduct.Selling_price,
+        Wholesale_price: newProduct.Wholesale_price ?? 0,
+        Barcode: newProduct.Barcode,
+        description: newProduct.description ?? '',
+      };
+      try{
+        console.log('Ready to save:', productToSave);
+        const savedProduct = await addProduct(productToSave);
+        console.log('Product saved successfully:', savedProduct)
+        setModalVisible(false);
+        reload();
+        setNewProduct({}); // reset form
+      }
+      catch (error) {
+        console.error('Failed to save product:', error);
+        alert('Failed to save product. Please try again.');
+      }
 
-    // For now, just close the modal (if you want)
-    setModalVisible(false);
     };
-  
+
 
   return (
     <View style={styles.container}>
@@ -90,7 +103,7 @@ export default function AddProductScreen() {
             <CameraView
                 style={styles.cameraView}
                 onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-                barCodeScannerSettings={{
+                barcodeScannerSettings={{
                 barcodeTypes: ['qr', 'ean13', 'ean8', 'code128'],
                 }}
             />
@@ -99,7 +112,7 @@ export default function AddProductScreen() {
       )}
 
 
-      <Fetchdata sendData={handleData} />
+ 
 
 
        {/* --- ADD THE MODAL COMPONENT HERE --- */}
