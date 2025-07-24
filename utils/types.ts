@@ -1,9 +1,9 @@
 // types.ts
 export type Product = {
-  id: number;
+  id?: number;
   name: string;
-  Selling_price: number;
-  Wholesale_price: number;
-  Barcode: string;
+  selling_price: number;
+  purchase_price: number;
+  barcode: string;
   description: string;
 };

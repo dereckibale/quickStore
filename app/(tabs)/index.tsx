@@ -1,9 +1,15 @@
+import { useProducts } from "@/components/FetchData";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
+  let { products } = useProducts();
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text>Whats the Problem Why can't I navigate???</Text>
+      {products?.map((product)=>
+         <Text key={product.id}>{product.name}</Text>
+      )}
+      
     </View>
   );
 }

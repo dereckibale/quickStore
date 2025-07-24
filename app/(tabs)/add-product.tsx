@@ -14,10 +14,10 @@ export default function AddProductScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [modalVisible, setModalVisible] = useState(false);
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
-    Barcode: undefined,
+    barcode: undefined,
     name: '',
-    Selling_price: undefined,
-    Wholesale_price: undefined,
+    selling_price: undefined,
+    purchase_price: undefined,
     description: undefined,
   });
 
@@ -32,13 +32,14 @@ export default function AddProductScreen() {
     setScannedData(data);
     console.log('Scanned barcode:', data);
     const foundProduct = products?.find(
-    (product) => product.Barcode.toString() === data );
+    (product) => product.barcode?.toString() === data );
         if(!foundProduct){
             console.log("Product NOT found, show form to add new product");
+            console.log(products)
             // Initialize the new product form with scanned barcode
             setNewProduct({
                 ...newProduct,
-                Barcode: data,
+                barcode: data,
             });
             setModalVisible(true); // open modal popup
         }else{
@@ -58,21 +59,22 @@ export default function AddProductScreen() {
 
     const handleSaveButton = async () => {
       
-      if (!newProduct.name || !newProduct.Barcode) {
+      if (!newProduct.name || !newProduct.barcode) {
         alert('Please fill in the required fields.');
         return;
       }
-      if (typeof newProduct.Selling_price !== "number" || isNaN(newProduct.Selling_price)) {
+      if (typeof newProduct.selling_price !== "number" || isNaN(newProduct.selling_price)) {
         alert('Please enter a valid Selling Price.');
         return;
       }
 
+     //Backend expects:  name, Selling_price, Wholesale_price, Barcode, description
+     
       const productToSave: Product = {
-        id: Date.now(), // or get the real id from your backend
         name: newProduct.name,
-        Selling_price: newProduct.Selling_price,
-        Wholesale_price: newProduct.Wholesale_price ?? 0,
-        Barcode: newProduct.Barcode,
+        selling_price: newProduct.selling_price,
+        purchase_price: newProduct.purchase_price ?? 0,
+        barcode: newProduct.barcode,
         description: newProduct.description ?? '',
       };
       try{
@@ -108,14 +110,8 @@ export default function AddProductScreen() {
                 }}
             />
         </View>
-
       )}
 
-
- 
-
-
-       {/* --- ADD THE MODAL COMPONENT HERE --- */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -126,7 +122,7 @@ export default function AddProductScreen() {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Add New Product</Text>
 
-            <Text>Barcode: {newProduct.Barcode ?? ''}</Text>
+            <Text>Barcode: {newProduct.barcode ?? ''}</Text>
 
             <TextInput
               style={styles.input}
@@ -137,16 +133,16 @@ export default function AddProductScreen() {
             <TextInput
               style={styles.input}
               placeholder="Selling Price"
-              value={newProduct.Selling_price?.toString() ?? ''}
+              value={newProduct.selling_price?.toString() ?? ''}
               keyboardType="numeric"
-              onChangeText={(text) => setNewProduct({ ...newProduct, Selling_price: Number(text) })}
+              onChangeText={(text) => setNewProduct({ ...newProduct, selling_price: Number(text) })}
             />
             <TextInput
               style={styles.input}
               placeholder="Wholesale Price"
-              value={newProduct.Wholesale_price?.toString() ?? ''}
+              value={newProduct.purchase_price?.toString() ?? ''}
               keyboardType="numeric"
-              onChangeText={(text) => setNewProduct({ ...newProduct, Wholesale_price: Number(text) })}
+              onChangeText={(text) => setNewProduct({ ...newProduct, purchase_price: Number(text) })}
             />
             
             <TextInput
@@ -164,7 +160,6 @@ export default function AddProductScreen() {
           </View>
         </View>
       </Modal>
-      {/* --- END OF MODAL COMPONENT --- */}
    
     </View>
   );

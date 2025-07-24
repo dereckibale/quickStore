@@ -21,7 +21,7 @@ export default function FetchData({ children }: FetchDataProps) {
   const [products, setProducts] = useState<Product[] | null>(null);
 
   const fetchProducts = ()=>{
-    fetch('http://10.0.0.54:3000/Products')
+    fetch('http://10.0.0.51:3000/')
     .then(res => res.json())
     .then((data: Product[])=> setProducts(data))
     .catch(console.error)
